@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-demo
+  labels:
+    name: node-demo
+  namespace: default
+spec:
+  containers:
+  - image: shackit/node-demo
+    imagePullPolicy: IfNotPresent
+    name: shackit-node-demo
+  restartPolicy: Always
