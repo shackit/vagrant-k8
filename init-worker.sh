@@ -4,7 +4,12 @@ source /vagrant/common.sh
 
 update_host $2
 
+config_hosts_file
+
 sudo yum -y install flannel kubernetes
+
+# General configuration of all kubernetes services:
+sudo sed -i "s/KUBE_MASTER=\"--master=http:\/\/127.0.0.1:8080\"/KUBE_MASTER=\"--master=http:\/\/${MASTER_IP}:8080\"/g" /etc/kubernetes/config
 
 # Configure the kubelet:
 echo KUBELET_ADDRESS="--address=0.0.0.0" | sudo tee /etc/kubernetes/kubelet
@@ -12,6 +17,7 @@ echo KUBELET_PORT="--port=10250" | sudo tee -a /etc/kubernetes/kubelet
 echo KUBELET_HOSTNAME="--hostname_override=${2}" | sudo tee -a /etc/kubernetes/kubelet
 echo KUBELET_API_SERVER="--api_servers=http://${MASTER_IP}:8080" | sudo tee -a /etc/kubernetes/kubelet
 echo KUBELET_ARGS="--cluster-dns=172.16.0.10" | sudo tee -a /etc/kubernetes/kubelet
+
 
 # Point flannel to Master IP:
 sudo sed -i "s/FLANNEL_ETCD_ENDPOINTS=\"http:\/\/127.0.0.1:2379\"/FLANNEL_ETCD_ENDPOINTS=\"http:\/\/${MASTER_IP}:2379\"/g" /etc/sysconfig/flanneld
