@@ -27,3 +27,9 @@ config_nfs_worker() {
   sudo tee -a /etc/fstab
 
 }
+
+config_hosts_file() {
+    echo "192.168.1.80    master" | sudo tee -a /etc/hosts
+    echo "192.168.1.81    worker-01" | sudo tee -a /etc/hosts
+    echo "192.168.1.82    worker-02" | sudo tee -a /etc/hosts
+}
