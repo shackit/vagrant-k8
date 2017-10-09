@@ -23,7 +23,7 @@ spec:
           value: kube-system
         - name: KUBERNETES_MASTER
           value: http://192.168.1.80:8080
-        image: gcr.io/kubernetes-helm/tiller:v2.3.0
+        image: gcr.io/kubernetes-helm/tiller:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
