@@ -3,7 +3,7 @@
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "centos-1611-02"
+  config.vm.box = "centos-1611-03"
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
@@ -13,7 +13,7 @@ Vagrant.configure(2) do |config|
   # k8 master:
   config.vm.define "master" do |master|
     master.vm.network "public_network", ip: "192.168.1.80"
-    master.vm.provision "shell", path: "./init-master.sh"
+    master.vm.provision "shell", path: "init-master.sh"
   end
 
   # k8 minion:
@@ -30,6 +30,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "nfs" do |nfs|
     ip = "192.168.1.50"
     nfs.vm.network "public_network", ip: ip
+    nfs.vm.provision "shell", path: "./init-nfs.sh", args: [ip, "nfs"]
   end
 
 
