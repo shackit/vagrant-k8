@@ -152,10 +152,3 @@ sudo mv kubelet.service kube-proxy.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable containerd cri-containerd kubelet kube-proxy
 sudo systemctl start containerd cri-containerd kubelet kube-proxy
-
-
-
-# sudo systemctl status containerd
-# sudo systemctl start cri-containerd
-# sudo systemctl stop kubelet
-# sudo systemctl status kube-proxy
