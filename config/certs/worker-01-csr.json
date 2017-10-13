@@ -1,0 +1,16 @@
+{
+  "CN": "system:node:worker-01",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "system:nodes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "London"
+    }
+  ]
+}
