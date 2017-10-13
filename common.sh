@@ -3,18 +3,19 @@
 export MASTER_IP=192.168.1.80
 
 update_host() {
-  sudo yum -y update
-  sudo yum -y clean all
+  sudo apt-get update
+  sudo apt-get -y upgrade
+  sudo apt-get -y install curl
 
   sudo hostnamectl set-hostname $1
 
-  sudo yum -y install ntp
+  #sudo yum -y install ntp
 
-  sudo systemctl stop firewalld
-  sudo systemctl disable firewalld
+  #sudo systemctl stop firewalld
+  #sudo systemctl disable firewalld
 
-  sudo systemctl start ntpd
-  sudo systemctl enable ntpd
+  #sudo systemctl start ntpd
+  #sudo systemctl enable ntpd
 }
 
 config_nfs_worker() {

@@ -3,7 +3,7 @@
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "centos-1611-03"
+  config.vm.box = "ubuntu/xenial/v20171012"
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
@@ -13,7 +13,7 @@ Vagrant.configure(2) do |config|
   # k8 master:
   config.vm.define "master" do |master|
     master.vm.network "public_network", ip: "192.168.1.80"
-    master.vm.provision "shell", path: "init-master.sh"
+    master.vm.provision "shell", path: "init-master.sh", args: ["192.168.1.80"]
   end
 
   # k8 minion:

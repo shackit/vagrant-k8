@@ -2,6 +2,33 @@
 
 Run a kubernetes setup locally with Vagrant.
 
+### Testing
+
+curl --cacert ca.pem https://192.168.1.80:6443/version
+
+sudo systemctl status containerd
+sudo systemctl status cri-containerd
+sudo systemctl status kubelet
+sudo systemctl status kube-proxy
+
+#### Configure vagrant host to talk to the cluster
+
+kubectl config set-cluster kubernetes-the-hard-way \
+  --certificate-authority=./config/ca.pem \
+  --embed-certs=true \
+  --server=https://192.168.1.80:6443
+
+kubectl config set-credentials admin \
+  --client-certificate=./config/admin.pem \
+  --client-key=./config/admin-key.pem
+
+kubectl config set-context kubernetes-the-hard-way \
+  --cluster=kubernetes-the-hard-way \
+  --user=admin
+
+kubectl config use-context kubernetes-the-hard-way
+
+
 ### DNS
 
 ### Setup the kube-system namespace
