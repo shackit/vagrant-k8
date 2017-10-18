@@ -1,16 +1,13 @@
 # vagrant-k8
 
-Run a kubernetes setup locally with Vagrant.
+> A vagrant implementation of Kubernetes the Hard way
+
+https://github.com/kelseyhightower/kubernetes-the-hard-way
 
 ### Testing
 
 ```
 curl --cacert ca.pem https://192.168.1.80:6443/version
-
-sudo systemctl status containerd
-sudo systemctl status cri-containerd
-sudo systemctl status kubelet
-sudo systemctl status kube-proxy
 ```
 
 #### Configure vagrant host to talk to the cluster
@@ -33,6 +30,50 @@ kubectl config use-context kubernetes-the-hard-way
 ```
 
 ### DNS
+
+* references: https://github.com/kubernetes/kubernetes/issues/21613
+
+#### Run a network tools container on the cluster to test DNS
+
+```
+# launch a pod
+$ kubectl run tools --image=ianneub/network-tools --command -- sleep 3600
+
+# get launched pods name
+$ POD_NAME=$(kubectl get pods -l run=tools -o jsonpath="{.items[0].metadata.name}")
+
+# output the content of resolv.conf
+kubectl exec -ti $POD_NAME -- cat /etc/resolv.conf
+search default.svc.cluster.local svc.cluster.local cluster.local home
+nameserver 10.32.0.10
+options ndots:5
+
+# run an nslookup command
+kubectl exec -ti $POD_NAME -- nslookup kubernetes
+;; reply from unexpected source: 10.200.1.5#53, expected 10.32.0.10#53
+;; reply from unexpected source: 10.200.1.5#53, expected 10.32.0.10#53
+;; reply from unexpected source: 10.200.1.5#53, expected 10.32.0.10#53
+;; connection timed out; no servers could be reached
+```
+
+#### Observe DNS traffic
+
+```
+sudo tcpdump -i cnio0 -vvv -s 0 -l -n port 53 | grep kubernetes
+```
+
+#### Adding this POSTROUTING iptables rule to the worker resolves DNS resolution
+```
+$ sudo iptables -t nat -I POSTROUTING -s 10.200.1.0/24 -d 10.200.1.0/24 -j MASQUERADE
+
+$ kubectl exec -ti $POD_NAME -- nslookup kubernetes
+Server:		10.32.0.10
+Address:	10.32.0.10#53
+
+Non-authoritative answer:
+Name:	kubernetes.default.svc.cluster.local
+Address: 10.32.0.1
+```
 
 ### Setup the kube-system namespace
 
