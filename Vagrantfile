@@ -29,10 +29,6 @@ Vagrant.configure(2) do |config|
       run: "always",
       inline: "ifconfig enp0s8 192.168.1.80 netmask 255.255.255.0 up"
 
-    #master.vm.provision "shell",
-    #  run: "always",
-    #  inline: "route add default gw 192.168.1.254"
-
     master.vm.provision "shell",
       run: "always",
       inline: "eval `route -n | awk '{ if ($8 ==\"enp0s3\" && $2 != \"0.0.0.0\") print \"route del default gw \" $2; }'`"
