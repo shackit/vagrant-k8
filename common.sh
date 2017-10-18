@@ -3,8 +3,8 @@
 export MASTER_IP=192.168.1.80
 
 update_host() {
-  sudo apt-get update
-  sudo apt-get -y upgrade
+  sudo apt-get update && sudo apt-get -y upgrade
+
   sudo apt-get -y install curl
 
   sudo hostnamectl set-hostname $1
