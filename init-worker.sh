@@ -7,7 +7,7 @@ update_host $2
 config_hosts_file
 
 # The socat binary enables support for the kubectl port-forward command.
-sudo apt-get -y install socat
+sudo apt-get -y install socat conntrack
 
 # Download the worker binaries
 curl -L -O \
