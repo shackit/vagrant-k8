@@ -52,7 +52,6 @@ Vagrant.configure(2) do |config|
         auto_config: false
 
       node.vm.provision "shell",
-        run: "always",
         args: [ip],
         inline: "echo -e \"auto enp0s8
         iface enp0s8 inet static
