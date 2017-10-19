@@ -9,8 +9,23 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way
 ```
 $ vagrant up master
 ...
-$ vagrant up worker-01
+$ vagrant up worker-01 worker-02
 ...
+
+vagrant ssh worker-01
+sudo iptables -t nat -I POSTROUTING -s 10.200.1.0/24 -d 10.200.1.0/24 -j MASQUERADE
+sudo route add -net 10.200.2.0/24 gw 192.168.1.82 dev enp0s8
+
+vagrant ssh worker-02
+sudo iptables -t nat -I POSTROUTING -s 10.200.2.0/24 -d 10.200.2.0/24 -j MASQUERADE
+sudo route add -net 10.200.1.0/24 gw 192.168.1.81 dev enp0s8
+
+# create dns service
+kubectl create -f ./deployments/kube-dns.yaml
+
+# create a couple of test pods for dns resolution
+kubectl create -f ./deployments/tools-01.yaml
+kubectl create -f ./deployments/tools-02.yaml
 
 ```
 
@@ -65,10 +80,10 @@ worker-01   Ready     <none>    2m        v1.8.0
 
 ### Testing
 
-### DNS
+### Issues
 
-* references: https://github.com/kubernetes/kubernetes/issues/21613
-
+* https://github.com/kubernetes/kubernetes/issues/21613
+* https://stackoverflow.com/questions/44312745/kubernetes-rbac-unable-to-upgrade-connection-forbidden-user-systemanonymous
 > Run a network tools container on the cluster to test DNS
 
 ```
@@ -126,8 +141,3 @@ tcpdump: listening on cnio0, link-type EN10MB (Ethernet), capture size 262144 by
     10.200.1.3.53 > 10.200.1.1.40513: [bad udp cksum 0x17f3 -> 0x209d!] 7177 q: A? kubernetes.default.svc.cluster.local. 1/0/0 kubernetes.default.svc.cluster.local. [7s] A 10.32.0.1 (70)
     10.32.0.10.53 > 10.200.1.4.40513: [bad udp cksum 0x1655 -> 0x223b!] 7177 q: A? kubernetes.default.svc.cluster.local. 1/0/0 kubernetes.default.svc.cluster.local. [7s] A 10.32.0.1 (70)
 ```
-
-
-
-
-$ sudo iptables -t nat -I POSTROUTING -s 10.200.2.0/24 -d 10.200.2.0/24 -j MASQUERADE
