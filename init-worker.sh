@@ -44,10 +44,20 @@ sudo mv kubectl kube-proxy kubelet /usr/local/bin/
 case "$2" in
   worker-01)
     POD_CIDR=10.200.1.0/24
+    # this is needed to address an issue with DNS name resolution
+    sudo iptables -t nat -I POSTROUTING -s $POD_CIDR -d $POD_CIDR -j MASQUERADE
+    # add persistent static route
+    echo -e "\tup route add -net 10.200.2.0 netmask 255.255.255.0 gw 192.168.1.82" |
+    sudo tee -a /etc/network/interfaces && sudo ifdown enp0s8 && sudo ifup enp0s8
     ;;
 
   worker-02)
     POD_CIDR=10.200.2.0/24
+    # this is needed to address an issue with DNS name resolution
+    sudo iptables -t nat -I POSTROUTING -s $POD_CIDR -d $POD_CIDR -j MASQUERADE
+    # add persistent static route
+    echo -e "\tup route add -net 10.200.1.0 netmask 255.255.255.0 gw 192.168.1.81" |
+    sudo tee -a /etc/network/interfaces && sudo ifdown enp0s8 && sudo ifup enp0s8
     ;;
 esac
 
