@@ -242,7 +242,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable kube-apiserver kube-controller-manager kube-scheduler
 sudo systemctl start kube-apiserver kube-controller-manager kube-scheduler
 
-sleep 10
+sleep 30
 
 # Create the system:kube-apiserver-to-kubelet ClusterRole with permissions
 # to access the Kubelet API and perform most common tasks associated
