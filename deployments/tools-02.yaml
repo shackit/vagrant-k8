@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tools02
+spec:
+  containers:
+  - name: tools02
+    image: ianneub/network-tools
+    command: ["sleep"]
+    args: ["3600"]
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
+    kubernetes.io/hostname: worker-02
